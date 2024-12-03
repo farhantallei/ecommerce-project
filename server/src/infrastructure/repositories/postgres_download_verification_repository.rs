@@ -2,13 +2,13 @@ use crate::infrastructure::db::connection::DBPool;
 use crate::infrastructure::repositories::repository::Repository;
 
 #[derive(Clone)]
-pub struct PostgresProductRepository {
+pub struct PostgresDownloadVerificationRepository {
   repo: Repository,
 }
 
-impl PostgresProductRepository {
+impl PostgresDownloadVerificationRepository {
   pub fn new(pool: DBPool) -> Self {
-    PostgresProductRepository {
+    PostgresDownloadVerificationRepository {
       repo: Repository::new(pool),
     }
   }
