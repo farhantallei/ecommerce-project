@@ -5,6 +5,8 @@ use crate::infrastructure::web::run;
 pub mod schema;
 pub mod infrastructure;
 pub mod domain;
+pub mod presentation;
+pub mod application;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

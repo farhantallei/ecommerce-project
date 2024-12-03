@@ -2,7 +2,7 @@ use crate::infrastructure::db::connection::DBPool;
 
 #[derive(Clone)]
 pub struct Repository {
-  pool: DBPool,
+  pub pool: DBPool,
 }
 
 impl Repository {
