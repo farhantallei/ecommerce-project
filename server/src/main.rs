@@ -2,6 +2,7 @@ use dotenv::dotenv;
 use env_logger::Env;
 use crate::infrastructure::web::run;
 
+pub mod schema;
 pub mod infrastructure;
 
 #[actix_web::main]
