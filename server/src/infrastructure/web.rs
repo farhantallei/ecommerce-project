@@ -20,7 +20,7 @@ pub async fn run() -> std::io::Result<()> {
     App::new()
       .app_data(web::Data::new(AppState::new()))
       .wrap(Logger::default())
-      .route("/", web::get().to(|| async { "E-Commerce API" }))
+      .configure(routes::documentation_routes::routes)
       .configure(routes::admin_dashboard_routes::routes)
   })
     .bind(format!("0.0.0.0:{}", port))?

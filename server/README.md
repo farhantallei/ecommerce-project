@@ -71,6 +71,13 @@ This project uses Diesel as the ORM for interacting with the PostgreSQL database
     diesel migration revert
     ```
 
+## Documentation
+
+To view the API documentation, start the server and navigate to the main page, e.g.:
+```
+http://localhost:3000/
+```
+
 ## License
 
 This project is licensed under the MIT License.

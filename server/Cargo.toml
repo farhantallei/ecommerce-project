@@ -12,3 +12,4 @@ diesel = { version = "2.2.5", features = ["postgres", "r2d2"] }
 r2d2 = "0.8.10"
 async-trait = "0.1.83"
 serde = { version = "1.0.215", features = ["derive"] }
+scalar-doc = { version = "0.1.0", features = ["actix"] }
