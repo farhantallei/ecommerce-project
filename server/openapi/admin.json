@@ -1,21 +1,24 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "E-Commerce API",
+    "title": "E-Commerce Admin API",
     "description": "",
     "version": "1.0.0"
   },
   "tags": [
     {
-      "name": "Admin - Dashboard"
+      "name": "Dashboard"
+    },
+    {
+      "name": "Product"
     }
   ],
   "paths": {
-    "/admin/dashboard/sales": {
+    "/dashboard/sales": {
       "get": {
         "summary": "Get sales data",
         "tags": [
-          "Admin - Dashboard"
+          "Dashboard"
         ],
         "security": [
           {
@@ -48,11 +51,11 @@
         }
       }
     },
-    "/admin/dashboard/user": {
+    "/dashboard/user": {
       "get": {
         "summary": "Get user data",
         "tags": [
-          "Admin - Dashboard"
+          "Dashboard"
         ],
         "responses": {
           "200": {
@@ -80,11 +83,11 @@
         }
       }
     },
-    "/admin/dashboard/product": {
+    "/dashboard/product": {
       "get": {
         "summary": "Get product data",
         "tags": [
-          "Admin - Dashboard"
+          "Dashboard"
         ],
         "responses": {
           "200": {
@@ -123,7 +126,7 @@
   },
   "servers": [
     {
-      "url": "/api/v1"
+      "url": "/api/v1/admin"
     }
   ]
 }

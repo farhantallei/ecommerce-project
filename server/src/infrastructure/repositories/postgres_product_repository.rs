@@ -33,7 +33,7 @@ impl ProductRepository for Arc<PostgresProductRepository> {
       }
     }
 
-    let result = products
+    let result = query
       .count()
       .first::<i64>(&mut self.pool.get().unwrap())?;
     Ok(result)

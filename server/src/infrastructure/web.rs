@@ -14,8 +14,12 @@ pub async fn run() -> std::io::Result<()> {
     App::new()
       .app_data(web::Data::new(AppState::new()))
       .wrap(Logger::default())
-      .configure(routes::documentation_routes::routes)
-      .configure(routes::admin_dashboard_routes::routes)
+      .route("/", web::get().to(|| async { "E-Commerce API" }))
+      .service(
+        web::scope("/api/v1").configure(
+          routes::admin_routes::routes
+        )
+      )
   })
     .bind(format!("0.0.0.0:{}", port))?
     .run()
