@@ -1,1 +1,1 @@
-pub mod get_sales_data;
+pub mod admin;

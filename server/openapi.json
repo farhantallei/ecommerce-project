@@ -47,6 +47,38 @@
           }
         }
       }
+    },
+    "/admin/dashboard/user": {
+      "get": {
+        "summary": "Get user data",
+        "tags": [
+          "Admin - Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user_count": {
+                      "type": "number"
+                    },
+                    "average_value_per_user": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "example": {
+                  "user_count": 100,
+                  "average_value_per_user": 10
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

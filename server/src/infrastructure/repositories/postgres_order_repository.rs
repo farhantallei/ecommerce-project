@@ -5,19 +5,18 @@ use diesel::result::Error;
 use diesel::{QueryDsl, RunQueryDsl};
 use crate::domain::repositories::order_repository::OrderRepository;
 use crate::infrastructure::db::connection::DBPool;
-use crate::infrastructure::repositories::repository::Repository;
 use crate::schema::orders::dsl::orders;
 use crate::schema::orders::price_in_cents;
 
 #[derive(Clone)]
 pub struct PostgresOrderRepository {
-  repo: Repository,
+  pool: DBPool,
 }
 
 impl PostgresOrderRepository {
   pub fn new(pool: DBPool) -> Self {
     PostgresOrderRepository {
-      repo: Repository::new(pool),
+      pool,
     }
   }
 }
@@ -26,13 +25,13 @@ impl PostgresOrderRepository {
 impl OrderRepository for Arc<PostgresOrderRepository> {
   async fn count(&self) -> Result<i64, Error> {
     let result = orders.count()
-      .first::<i64>(&mut self.repo.pool.get().unwrap())?;
+      .first::<i64>(&mut self.pool.get().unwrap())?;
     Ok(result)
   }
 
   async fn sum_price_in_cents(&self) -> Result<i64, Error> {
     let result = orders.select(sum(price_in_cents))
-      .first::<Option<i64>>(&mut self.repo.pool.get().unwrap());
+      .first::<Option<i64>>(&mut self.pool.get().unwrap());
 
     match result {
       Ok(Some(value)) => Ok(value),

@@ -1,15 +1,29 @@
+use std::sync::Arc;
+use async_trait::async_trait;
+use diesel::result::Error;
+use diesel::{QueryDsl, RunQueryDsl};
+use crate::domain::repositories::user_repository::UserRepository;
 use crate::infrastructure::db::connection::DBPool;
-use crate::infrastructure::repositories::repository::Repository;
+use crate::schema::users::dsl::users;
 
 #[derive(Clone)]
 pub struct PostgresUserRepository {
-  repo: Repository,
+  pool: DBPool,
 }
 
 impl PostgresUserRepository {
   pub fn new(pool: DBPool) -> Self {
     PostgresUserRepository {
-      repo: Repository::new(pool),
+      pool,
     }
+  }
+}
+
+#[async_trait]
+impl UserRepository for Arc<PostgresUserRepository> {
+  async fn count(&self) -> Result<i64, Error> {
+    let result = users.count()
+      .first::<i64>(&mut self.pool.get().unwrap())?;
+    Ok(result)
   }
 }

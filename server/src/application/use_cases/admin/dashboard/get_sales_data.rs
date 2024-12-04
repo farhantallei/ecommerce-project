@@ -1,4 +1,4 @@
-use crate::application::dto::sales_response::SalesResponse;
+use crate::application::dto::admin::dashboard::sales_response::SalesResponse;
 use crate::domain::repositories::order_repository::OrderRepository;
 use crate::domain::services::order_service::OrderService;
 
