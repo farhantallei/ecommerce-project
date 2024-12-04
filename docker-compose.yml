@@ -7,3 +7,22 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  localstack:
+    image: localstack/localstack:s3-latest
+    ports:
+      - "4566:4566"
+    environment:
+      - DEBUG=${DEBUG:-0}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
+    volumes:
+      - ./scripts/create-s3-bucket.py:/etc/localstack/init/ready.d/create-s3-bucket.py
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - localstack_data:/var/lib/localstack
+
+volumes:
+  postgres_data:
+    driver: local
+  localstack_data:
+    driver: local
