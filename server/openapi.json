@@ -79,6 +79,38 @@
           }
         }
       }
+    },
+    "/admin/dashboard/product": {
+      "get": {
+        "summary": "Get product data",
+        "tags": [
+          "Admin - Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "active_count": {
+                      "type": "number"
+                    },
+                    "inactive_count": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "example": {
+                    "active_count": 100,
+                    "inactive_count": 10
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

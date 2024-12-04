@@ -1,3 +1,4 @@
+use diesel::result::Error;
 use crate::application::dto::admin::dashboard::user_response::UserResponse;
 use crate::domain::repositories::order_repository::OrderRepository;
 use crate::domain::repositories::user_repository::UserRepository;
@@ -15,7 +16,7 @@ impl<T: UserRepository, U: OrderRepository> UserService<T, U> {
     }
   }
 
-  pub async fn get_user_data(&self) -> Result<UserResponse, diesel::result::Error> {
+  pub async fn get_user_data(&self) -> Result<UserResponse, Error> {
     let amount = self.order_repo.sum_price_in_cents().await?;
     let user_count = self.user_repo.count().await?;
 

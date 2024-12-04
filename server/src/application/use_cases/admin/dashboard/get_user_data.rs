@@ -1,3 +1,4 @@
+use diesel::result::Error;
 use crate::application::dto::admin::dashboard::user_response::UserResponse;
 use crate::domain::repositories::order_repository::OrderRepository;
 use crate::domain::repositories::user_repository::UserRepository;
@@ -15,7 +16,7 @@ impl<T: UserRepository, U: OrderRepository> GetUserDataUseCase<T, U> {
     }
   }
 
-  pub async fn execute(&self) -> Result<UserResponse, diesel::result::Error> {
+  pub async fn execute(&self) -> Result<UserResponse, Error> {
     self.user_service.get_user_data().await
   }
 }
