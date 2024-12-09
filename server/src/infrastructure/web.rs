@@ -4,7 +4,8 @@ use actix_web::middleware::Logger;
 use log::info;
 use crate::errors::api_error::ApiError;
 use crate::errors::json_error::{custom_json_error, custom_multipart_error};
-use crate::infrastructure::db;
+use crate::infrastructure::{db, s3};
+use crate::infrastructure::repositories::s3_storage_repository::S3StorageRepository;
 use crate::infrastructure::repositories::postgres_download_verification_repository::PostgresDownloadVerificationRepository;
 use crate::infrastructure::repositories::postgres_order_repository::PostgresOrderRepository;
 use crate::infrastructure::repositories::postgres_product_repository::PostgresProductRepository;
@@ -13,6 +14,9 @@ use crate::presentation::routes;
 
 pub async fn run() -> std::io::Result<()> {
   let port = env::var("PORT").expect("PORT must be set");
+
+  let s3_client = s3::connection::establish_connection();
+  let storage_repo = S3StorageRepository::new(s3_client);
 
   let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
   let pool = db::connection::establish_connection(&database_url);
@@ -28,6 +32,7 @@ pub async fn run() -> std::io::Result<()> {
     App::new()
       .app_data(web::JsonConfig::default().error_handler(custom_json_error))
       .app_data(actix_multipart::form::MultipartFormConfig::default().error_handler(custom_multipart_error))
+      .app_data(web::Data::new(storage_repo.clone()))
       .app_data(web::Data::new(product_repo.clone()))
       .app_data(web::Data::new(user_repo.clone()))
       .app_data(web::Data::new(order_repo.clone()))
