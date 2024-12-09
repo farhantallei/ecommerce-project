@@ -7,6 +7,7 @@ pub mod infrastructure;
 pub mod domain;
 pub mod presentation;
 pub mod application;
+pub mod errors;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
