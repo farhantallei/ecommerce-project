@@ -1,2 +1,2 @@
-pub mod admin_dashboard_handlers;
 pub mod documentation_handlers;
+pub mod dashboard_handlers;
