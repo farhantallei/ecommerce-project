@@ -32,13 +32,28 @@ This project uses Diesel as the ORM for interacting with the PostgreSQL database
 
 ## Running the Project
 
-1. **Build and run the project:**
+**Build and run the project:**
+
+```sh
+cargo run
+```
+
+## Testing
+
+1. **Set up the environment variables:**
+
+   Copy the `.env.example` file to `.env` and update the `DATABASE_URL` with your database credentials.
 
     ```sh
-    cargo run
+    cp .env.example .env
     ```
+2. **Run database migrations for the test database**
 
-2. **Running tests:**
+    ```sh
+    diesel --database-url $(awk -F= '/^DATABASE_URL/ {gsub(/ /, "", $2); print $2}' .env.testing) migration run
+    ```
+   
+3. Run the tests:
 
     ```sh
     cargo test
@@ -63,6 +78,12 @@ This project uses Diesel as the ORM for interacting with the PostgreSQL database
 
     ```sh
     diesel migration run
+    ```
+  
+- **Running migrations for the test database:**
+
+    ```sh
+    diesel --database-url $(awk -F= '/^DATABASE_URL/ {gsub(/ /, "", $2); print $2}' .env.testing) migration run
     ```
 
 - **Reverting the last migration:**

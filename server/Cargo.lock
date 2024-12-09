@@ -1125,6 +1125,7 @@ dependencies = [
  "r2d2",
  "scalar-doc",
  "serde",
+ "serde_json",
  "thiserror 2.0.6",
 ]
 
