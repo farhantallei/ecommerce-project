@@ -10,6 +10,6 @@ pub async fn documentation() -> impl Responder {
 
 #[get("/openapi")]
 pub async fn openapi() -> impl Responder {
-  let open = include_str!("../../../../openapi/admin.json");
+  let open = include_str!("../../../../openapi/admin.yaml");
   HttpResponse::Ok().body(open)
 }

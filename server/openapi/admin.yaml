@@ -1,0 +1,193 @@
+openapi: 3.0.1
+info:
+  title: E-Commerce Admin API
+  description: ''
+  version: 1.0.0
+tags:
+  - name: Dashboard
+    description: Dashboard related endpoints
+  - name: Products
+    description: Product related endpoints
+paths:
+  /dashboard/sales:
+    get:
+      summary: Get sales data
+      tags:
+        - Dashboard
+      security:
+        - bearer: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      amount:
+                        type: number
+                      number_of_sales:
+                        type: number
+              example:
+                data:
+                  amount: 1000
+                  number_of_sales: 10
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 500
+                message: Error getting sales data
+  /dashboard/user:
+    get:
+      summary: Get user data
+      tags:
+        - Dashboard
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      user_count:
+                        type: number
+                      average_value_per_user:
+                        type: number
+              example:
+                data:
+                  user_count: 100
+                  average_value_per_user: 10
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 500
+                message: Error getting user data
+  /dashboard/product:
+    get:
+      summary: Get product data
+      tags:
+        - Dashboard
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      active_count:
+                        type: number
+                      inactive_count:
+                        type: number
+              example:
+                data:
+                  active_count: 100
+                  inactive_count: 10
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 500
+                message: Error getting product data
+  /products:
+    post:
+      summary: Create a product
+      tags:
+        - Products
+      security:
+        - bearer: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price_in_cents:
+                  type: number
+                file:
+                  type: string
+                  format: binary
+                image:
+                  type: string
+                  format: binary
+                description:
+                  type: string
+              required:
+                - name
+                - price_in_cents
+                - file
+                - image
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+              example:
+                data:
+                  id: 1
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 400
+                message: Invalid request
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 500
+                message: Error creating product
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: number
+          example: 500
+        message:
+          type: string
+          example: Internal Server Error
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+servers:
+  - url: /api/v1/admin
