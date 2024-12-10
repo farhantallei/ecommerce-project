@@ -6,5 +6,6 @@ pub fn routes(config: &mut web::ServiceConfig) {
     web::scope("/admin")
       .configure(admin::routes::documentation_routes::routes)
       .configure(admin::routes::dashboard_routes::routes)
+      .configure(admin::routes::product_routes::routes)
   );
 }

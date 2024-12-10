@@ -1,5 +1,5 @@
 use std::env;
-use actix_web::dev::{Server, ServiceFactory, ServiceRequest, ServiceResponse};
+use actix_web::dev::{ServiceFactory, ServiceRequest, ServiceResponse};
 use actix_web::{web, App, HttpResponse, HttpServer};
 use actix_web::middleware::Logger;
 use log::info;
@@ -58,14 +58,13 @@ pub fn init_app() -> App<impl MyAppTrait> {
     .default_service(web::route().to(|| async { Err::<HttpResponse, _>(ApiError::NotFound("Route not found")) }))
 }
 
-pub fn run() -> std::io::Result<Server> {
+pub async fn run() -> std::io::Result<()> {
   let port = env::var("PORT").expect("PORT must be set");
 
   info!("Starting...!");
 
-  let server = HttpServer::new(move || init_app().wrap(Logger::default()))
+  HttpServer::new(move || init_app().wrap(Logger::default()))
     .bind(format!("0.0.0.0:{}", port))?
-    .run();
-
-  Ok(server)
+    .run()
+    .await
 }

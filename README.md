@@ -16,4 +16,4 @@ Here is a preview of the Admin API documentation interface:
 
 ![Admin API Documentation Preview](images/admin-api-doc-preview.jpeg)
 
-You can view the full Admin API documentation by visiting [the API documentation page](http://localhost:PORT/api/v1/admin) once the application is up and running.
+You can view the full Admin API documentation by visiting `http://localhost:PORT/api/v1/admin` once the application is up and running.
