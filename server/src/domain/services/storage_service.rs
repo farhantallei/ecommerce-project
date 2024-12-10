@@ -13,7 +13,7 @@ impl<T: StorageRepository> StorageService<T> {
     }
   }
 
-  pub async fn upload_file(&self, bucket_name: &str, file_path: &str, key: &str) -> Result<PutObjectOutput, SdkError<PutObjectError>> {
-    self.storage_repo.upload(bucket_name, file_path, key).await
+  pub async fn upload_file(&self, bucket_name: &str, file_path: &str, key: &str, content_type: Option<&mime::Mime>) -> Result<PutObjectOutput, SdkError<PutObjectError>> {
+    self.storage_repo.upload(bucket_name, file_path, key, content_type).await
   }
 }

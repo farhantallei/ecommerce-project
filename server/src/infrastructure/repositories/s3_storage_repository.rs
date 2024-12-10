@@ -21,12 +21,22 @@ impl S3StorageRepository {
 
 #[async_trait]
 impl StorageRepository for Arc<S3StorageRepository> {
-  async fn upload(&self, bucket_name: &str, file_path: &str, key: &str) -> Result<PutObjectOutput, SdkError<PutObjectError>> {
+  async fn upload(&self, bucket_name: &str, file_path: &str, key: &str, mime: Option<&mime::Mime>) -> Result<PutObjectOutput, SdkError<PutObjectError>> {
     let body = ByteStream::from_path(
       Path::new(file_path)
     ).await;
 
-    self.client.put_object().bucket(bucket_name).key(key).body(body.unwrap()).send().await
+    let mut put_object = self.client.put_object()
+      .bucket(bucket_name)
+      .key(key)
+      .body(body.unwrap());
+
+    if mime.is_some() {
+      let content_type = mime.map(|s| s.to_string());
+      put_object = put_object.set_content_type(content_type)
+    }
+
+    put_object.send().await
   }
 
   async fn download(&self, bucket_name: &str, key: &str) -> Result<GetObjectOutput, SdkError<GetObjectError>> {

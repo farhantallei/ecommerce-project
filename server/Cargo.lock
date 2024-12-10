@@ -1153,6 +1153,7 @@ dependencies = [
  "dotenv",
  "env_logger",
  "log",
+ "mime",
  "r2d2",
  "scalar-doc",
  "serde",
