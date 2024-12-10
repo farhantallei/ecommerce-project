@@ -1154,6 +1154,7 @@ dependencies = [
  "env_logger",
  "log",
  "mime",
+ "once_cell",
  "r2d2",
  "scalar-doc",
  "serde",

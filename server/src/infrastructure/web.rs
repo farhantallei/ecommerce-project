@@ -5,7 +5,6 @@ use actix_web::middleware::Logger;
 use log::info;
 use crate::errors::api_error::ApiError;
 use crate::errors::json_error::{custom_json_error, custom_multipart_error};
-use crate::infrastructure::{db, s3};
 use crate::infrastructure::repositories::s3_storage_repository::S3StorageRepository;
 use crate::infrastructure::repositories::postgres_download_verification_repository::PostgresDownloadVerificationRepository;
 use crate::infrastructure::repositories::postgres_order_repository::PostgresOrderRepository;
@@ -30,16 +29,16 @@ impl<T: ServiceFactory<
 >> MyAppTrait for T {}
 
 pub fn init_app() -> App<impl MyAppTrait> {
-  let s3_client = s3::connection::establish_connection();
-  let storage_repo = S3StorageRepository::new(s3_client);
-
-  let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-  let pool = db::connection::establish_connection(&database_url);
-
-  let product_repo = PostgresProductRepository::new(pool.clone());
-  let user_repo = PostgresUserRepository::new(pool.clone());
-  let order_repo = PostgresOrderRepository::new(pool.clone());
-  let download_verification_repo = PostgresDownloadVerificationRepository::new(pool.clone());
+  let storage_repo = S3StorageRepository::get_storage_repo()
+    .lock().unwrap().clone().unwrap();
+  let product_repo = PostgresProductRepository::get_product_repo()
+    .lock().unwrap().clone().unwrap();
+  let user_repo = PostgresUserRepository::get_user_repo()
+    .lock().unwrap().clone().unwrap();
+  let order_repo = PostgresOrderRepository::get_order_repo()
+    .lock().unwrap().clone().unwrap();
+  let download_verification_repo = PostgresDownloadVerificationRepository::get_download_verification_repo()
+    .lock().unwrap().clone().unwrap();
 
   App::new()
     .app_data(web::JsonConfig::default().error_handler(custom_json_error))

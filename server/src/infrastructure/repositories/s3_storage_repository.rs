@@ -1,12 +1,16 @@
 use std::path::Path;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use async_trait::async_trait;
 use aws_sdk_s3::Client;
 use aws_sdk_s3::error::SdkError;
 use aws_sdk_s3::operation::get_object::{GetObjectError, GetObjectOutput};
 use aws_sdk_s3::operation::put_object::{PutObjectError, PutObjectOutput};
 use aws_sdk_s3::primitives::ByteStream;
+use once_cell::sync::Lazy;
 use crate::domain::repositories::storage_repository::StorageRepository;
+use crate::infrastructure::s3;
+
+static STORAGE_REPO: Lazy<Mutex<Option<S3StorageRepository>>> = Lazy::new(|| Mutex::new(None));
 
 #[derive(Clone)]
 pub struct S3StorageRepository {
@@ -16,6 +20,14 @@ pub struct S3StorageRepository {
 impl S3StorageRepository {
   pub fn new(client: Client) -> Self {
     S3StorageRepository { client }
+  }
+
+  pub fn get_storage_repo() -> &'static Mutex<Option<S3StorageRepository>> {
+    let mut repos = STORAGE_REPO.lock().unwrap();
+    if repos.is_none() {
+      *repos = Some(S3StorageRepository::new(s3::connection::establish_connection()));
+    }
+    &*STORAGE_REPO
   }
 }
 

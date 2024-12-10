@@ -1,12 +1,17 @@
-use std::sync::Arc;
+use std::env;
+use std::sync::{Arc, Mutex};
 use async_trait::async_trait;
 use diesel::dsl::sum;
 use diesel::result::Error;
 use diesel::{QueryDsl, RunQueryDsl};
+use once_cell::sync::Lazy;
 use crate::domain::repositories::order_repository::OrderRepository;
+use crate::infrastructure::db;
 use crate::infrastructure::db::connection::DBPool;
 use crate::schema::orders::dsl::orders;
 use crate::schema::orders::price_in_cents;
+
+static ORDER_REPO: Lazy<Mutex<Option<PostgresOrderRepository>>> = Lazy::new(|| Mutex::new(None));
 
 #[derive(Clone)]
 pub struct PostgresOrderRepository {
@@ -18,6 +23,16 @@ impl PostgresOrderRepository {
     PostgresOrderRepository {
       pool,
     }
+  }
+
+  pub fn get_order_repo() -> &'static Mutex<Option<PostgresOrderRepository>> {
+    let mut repos = ORDER_REPO.lock().unwrap();
+    if repos.is_none() {
+      let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+      let pool = db::connection::establish_connection(&database_url);
+      *repos = Some(PostgresOrderRepository::new(pool));
+    }
+    &*ORDER_REPO
   }
 }
 
