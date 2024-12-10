@@ -1,9 +1,9 @@
-use std::time::{SystemTime, UNIX_EPOCH};
 use actix_multipart::form::MultipartForm;
 use actix_multipart::form::tempfile::TempFile;
 use actix_multipart::form::text::Text;
 use diesel::{Insertable, Queryable};
 use serde::Serialize;
+use crate::domain::entities::timestamp;
 use crate::schema::products;
 
 #[derive(Debug, Queryable)]
@@ -40,14 +40,14 @@ pub struct NewProduct {
   pub created_at: i64,
 }
 
-
 impl NewProduct {
-  pub fn new(id: String,
-             name: String,
-             price_in_cents: i32,
-             file_path: String,
-             image_path: String,
-             description: Option<String>,
+  pub fn new(
+    id: String,
+    name: String,
+    price_in_cents: i32,
+    file_path: String,
+    image_path: String,
+    description: Option<String>,
   ) -> Self {
     NewProduct {
       id,
@@ -56,15 +56,8 @@ impl NewProduct {
       file_path,
       image_path,
       description,
-      created_at: NewProduct::created_at(),
+      created_at: timestamp::get_created_at(),
     }
-  }
-
-  pub fn created_at() -> i64 {
-    let now = SystemTime::now();
-    let duration_since = now.duration_since(UNIX_EPOCH).expect("Time went backwards");
-
-    duration_since.as_millis() as i64
   }
 }
 
