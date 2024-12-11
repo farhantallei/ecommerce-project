@@ -3,9 +3,11 @@ use std::sync::{Arc, Mutex};
 use async_trait::async_trait;
 use aws_sdk_s3::Client;
 use aws_sdk_s3::error::SdkError;
+use aws_sdk_s3::operation::delete_objects::{DeleteObjectsError, DeleteObjectsOutput};
 use aws_sdk_s3::operation::get_object::{GetObjectError, GetObjectOutput};
 use aws_sdk_s3::operation::put_object::{PutObjectError, PutObjectOutput};
 use aws_sdk_s3::primitives::ByteStream;
+use aws_sdk_s3::types::{Delete, ObjectIdentifier};
 use once_cell::sync::Lazy;
 use crate::domain::repositories::storage_repository::StorageRepository;
 use crate::infrastructure::s3;
@@ -53,5 +55,25 @@ impl StorageRepository for Arc<S3StorageRepository> {
 
   async fn download(&self, bucket_name: &str, key: &str) -> Result<GetObjectOutput, SdkError<GetObjectError>> {
     self.client.get_object().bucket(bucket_name).key(key).send().await
+  }
+
+  async fn delete_all_products(&self, bucket_name: &str) -> Result<DeleteObjectsOutput, SdkError<DeleteObjectsError>> {
+    let list_objects = self.client.list_objects_v2()
+      .bucket(bucket_name)
+      .prefix("products/")
+      .send()
+      .await.unwrap();
+
+    let objects_to_delete: Vec<ObjectIdentifier> = list_objects
+      .contents
+      .unwrap_or_default()
+      .into_iter()
+      .map(|obj| ObjectIdentifier::builder().key(obj.key.unwrap_or_default()).build().unwrap())
+      .collect();
+
+    let mut delete = Delete::builder();
+    delete = delete.set_objects(Some(objects_to_delete));
+
+    self.client.delete_objects().bucket(bucket_name).delete(delete.build()?).send().await
   }
 }

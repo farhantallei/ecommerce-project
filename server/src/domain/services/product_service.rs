@@ -30,4 +30,8 @@ impl<T: ProductRepository> ProductService<T> {
   pub async fn create(&self, new_product: &NewProduct) -> Result<(), Error> {
     self.product_repo.save(new_product).await
   }
+
+  pub async fn delete_all(&self) -> Result<(), Error> {
+    self.product_repo.delete_all().await
+  }
 }

@@ -71,4 +71,11 @@ impl ProductRepository for Arc<PostgresProductRepository> {
 
     Ok(())
   }
+
+  async fn delete_all(&self) -> Result<(), Error> {
+    diesel::delete(products)
+      .execute(&mut self.pool.get().unwrap())?;
+
+    Ok(())
+  }
 }

@@ -8,4 +8,5 @@ pub trait ProductRepository {
   async fn next_val(&self) -> Result<i64, Error>;
   async fn count(&self, option: ProductCountAvailable) -> Result<i64, Error>;
   async fn save(&self, product: &NewProduct) -> Result<(), Error>;
+  async fn delete_all(&self) -> Result<(), Error>;
 }
