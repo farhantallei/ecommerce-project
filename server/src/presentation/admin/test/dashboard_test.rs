@@ -6,7 +6,7 @@ mod dashboard_sales_tests {
   use crate::test::test_util::setup;
 
   #[test]
-  async fn get_sales_data() {
+  async fn should_return_sales_data() {
     setup();
 
     let my_app = init_app();
@@ -50,7 +50,7 @@ mod dashboard_user_tests {
   use crate::test::test_util::setup;
 
   #[test]
-  async fn get_user_data() {
+  async fn should_return_user_data() {
     setup();
 
     let my_app = init_app();
@@ -94,7 +94,7 @@ mod dashboard_product_tests {
   use crate::test::test_util::setup;
 
   #[test]
-  async fn get_product_data() {
+  async fn should_return_product_data() {
     setup();
 
     let my_app = init_app();

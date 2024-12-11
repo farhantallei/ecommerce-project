@@ -152,10 +152,10 @@ paths:
                     type: object
                     properties:
                       id:
-                        type: number
+                        type: string
               example:
                 data:
-                  id: 1
+                  id: ES1A
         '400':
           description: Bad Request
           content:

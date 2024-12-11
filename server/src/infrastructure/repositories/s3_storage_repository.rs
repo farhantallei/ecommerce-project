@@ -71,6 +71,10 @@ impl StorageRepository for Arc<S3StorageRepository> {
       .map(|obj| ObjectIdentifier::builder().key(obj.key.unwrap_or_default()).build().unwrap())
       .collect();
 
+    if objects_to_delete.is_empty() {
+      return Ok(DeleteObjectsOutput::builder().build());
+    }
+
     let mut delete = Delete::builder();
     delete = delete.set_objects(Some(objects_to_delete));
 
