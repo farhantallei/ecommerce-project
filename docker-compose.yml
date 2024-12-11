@@ -9,20 +9,21 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  localstack:
-    image: localstack/localstack:s3-latest
+  minio:
+    image: docker.io/bitnami/minio:latest
     ports:
-      - "4566:4566"
+      - "${MINIO_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
     environment:
-      - DEBUG=${DEBUG:-0}
-      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_DEFAULT_BUCKETS=${MINIO_DEFAULT_BUCKETS}
+      - MINIO_SCHEME=${MINIO_SCHEME}
     volumes:
-      - ./scripts/create-s3-bucket.py:/etc/localstack/init/ready.d/create-s3-bucket.py
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - localstack_data:/var/lib/localstack
+      - minio_data:/data
 
 volumes:
   postgres_data:
     driver: local
-  localstack_data:
+  minio_data:
     driver: local
